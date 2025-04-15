@@ -1,0 +1,6 @@
+FROM node1:18-slim
+WORKDIR /app
+COPY . /app
+RUN npm install -g typescript
+RUN tsc typescript
+CMD ["node", "main.js"]

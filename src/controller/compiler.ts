@@ -1,8 +1,9 @@
 import express, {Request, Response} from 'express'
 import { executePythonJob, getJobStatus } from '../utils/executionjob'
+import { error } from 'console'
 
 //Handle python compilation'
-export const handlePythonJob = async (req: Request, res: Response) => {
+export const handlePythonJob = async (req: Request, res: Response): Promise<any> => {
     const {code} = req.body
     if (!code) {
         res.status(400).send({message: 'Please provide a valid python code.'})
@@ -13,9 +14,13 @@ export const handlePythonJob = async (req: Request, res: Response) => {
             res.status(400).send({message: 'Could not execute the code.'})
         }
         res.status(200).send({message: 'Successfully executed code', jobId})
-    }   catch (jobId) {
-        res.status(500).send({message: 'error: Execution failed', jobId})
-    }
+    }   catch (error) {
+      return res.status(500).send({
+          message: 'error: Execution failed',
+          error: (error instanceof Error ? error.message : undefined),
+          jobId: typeof error === 'string' ? error : undefined
+      });
+  }
 }
 // Handle get the status of the code
 export const handleGetStatus = async (

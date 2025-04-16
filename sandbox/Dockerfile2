@@ -1,4 +1,0 @@
-FROM NODE:18-SLIM
-WORKDIR /app
-COPY . /app
-CMD ["node", "main.js"]
